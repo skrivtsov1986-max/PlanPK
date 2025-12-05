@@ -2,27 +2,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlanPK.Repositories;
 using PlanPK.Entities;
+using PlanPK.YouTrack;
 using System.Linq;
 
 namespace PlanPK.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
         private readonly IssueRepository _issueRepository;
+        private readonly YouTrackImportService _youTrackImportService;
 
         public List<Issues> Issues { get; private set; } = new();
 
-        public IndexModel(ILogger<IndexModel> logger, IssueRepository issueRepository)
+        public IndexModel(IssueRepository issueRepository, YouTrackImportService youTrackImportService)
         {
-            _logger = logger;
             _issueRepository = issueRepository;
+            _youTrackImportService = youTrackImportService;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            var allIssues = _issueRepository.GetIssues();
+            var allIssues = await _issueRepository.GetIssuesAsync(HttpContext.RequestAborted);
             Issues = BuildIssueTree(allIssues);
+        }
+
+        public async Task<IActionResult> OnPostRefreshAsync()
+        {
+            await _youTrackImportService.RefreshIssuesAsync(HttpContext.RequestAborted);
+            return RedirectToPage();
         }
 
         private static List<Issues> BuildIssueTree(List<Issues> issues)
