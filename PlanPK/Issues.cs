@@ -11,7 +11,7 @@ namespace PlanPK
         public double PlanHours {  get; set; }
         public double FaktHours { get; set; }
         public DateTime? TermDate { get; set; }
-        public List<Issues> ChildrenIssue { get; set; }
+        public List<Issues> ChildrenIssue { get; set; } = new();
 
     }
 }

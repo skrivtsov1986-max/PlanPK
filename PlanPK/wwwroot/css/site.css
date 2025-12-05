@@ -29,3 +29,35 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.table-wrapper {
+  margin: 0 auto;
+  max-width: 960px;
+}
+
+.my-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.my-table th,
+.my-table td {
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.my-table thead {
+  background-color: #f8f9fa;
+}
+
+.tree-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tree-branch {
+  color: #6c757d;
+}
