@@ -18,7 +18,7 @@ namespace PlanPK.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTree()
         {
-            var nodes = _repository.GetIssues();
+            var nodes = await _repository.GetIssuesAsync(HttpContext.RequestAborted);
             var tree = BuildTree(nodes, null); // Передаем корневой узел
             return Ok(tree);
         }
