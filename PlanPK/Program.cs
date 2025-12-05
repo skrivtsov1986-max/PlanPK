@@ -1,6 +1,8 @@
 using PlanPK;
 using PlanPK.Repositories;
 using Microsoft.EntityFrameworkCore;
+using PlanPK.Services;
+using PlanPK.Services.YouTrack;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IssueRepository>();
+builder.Services.Configure<YouTrackOptions>(builder.Configuration.GetSection("YouTrack"));
+builder.Services.AddHttpClient<YouTrackClient>();
+builder.Services.AddScoped<IssueSyncService>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

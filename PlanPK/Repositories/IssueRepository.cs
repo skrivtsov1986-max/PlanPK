@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PlanPK.Entities;
 
 namespace PlanPK.Repositories
@@ -11,12 +10,11 @@ namespace PlanPK.Repositories
         {
             _appDbContext = appDbContext_;
         }
-        public List<Issues> GetIssues()
+        public async Task<List<Issues>> GetIssuesAsync(CancellationToken cancellationToken = default)
         {
-            var result = _appDbContext.Database.SqlQueryRaw<Issues>(
-
-            $"Select * from dbo.Issues;").ToList();
-            return result;
+            return await _appDbContext.Issues
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
     }
 }

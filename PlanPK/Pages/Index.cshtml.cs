@@ -19,9 +19,9 @@ namespace PlanPK.Pages
             _issueRepository = issueRepository;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync(CancellationToken cancellationToken)
         {
-            var allIssues = _issueRepository.GetIssues();
+            var allIssues = await _issueRepository.GetIssuesAsync(cancellationToken);
             Issues = BuildIssueTree(allIssues);
         }
 
