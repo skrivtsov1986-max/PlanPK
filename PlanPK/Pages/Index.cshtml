@@ -5,47 +5,58 @@
 }
 
 @functions {
-    void RenderIssueRows(IEnumerable<Issues> issues, int level)
+    void RenderIssueTree(IEnumerable<Issues> issues)
     {
-        foreach (var issue in issues)
-        {
-            <tr>
-                <td>@issue.Number</td>
-                <td>
-                    <div class="tree-cell" style="padding-left:@(level * 16)px">
-                        <span class="tree-branch">@((issue.ChildrenIssue?.Any() ?? false) ? "▸" : "•")</span>
-                        <span>@issue.Name</span>
-                    </div>
-                </td>
-            </tr>
-
-            if (issue.ChildrenIssue?.Any() ?? false)
+        <ul class="issue-tree">
+            @foreach (var issue in issues)
             {
-                RenderIssueRows(issue.ChildrenIssue, level + 1);
+                <li>
+                    <div class="issue-card">
+                        <div class="issue-title">
+                            <span class="issue-number">@issue.Number</span>
+                            <span class="issue-name">@issue.Name</span>
+                        </div>
+                        <dl class="issue-meta">
+                            <div>
+                                <dt>ID</dt>
+                                <dd>@issue.Id</dd>
+                            </div>
+                            <div>
+                                <dt>Parent ID</dt>
+                                <dd>@(issue.ParentId ?? "—")</dd>
+                            </div>
+                            <div>
+                                <dt>План, ч</dt>
+                                <dd>@issue.PlanHours</dd>
+                            </div>
+                            <div>
+                                <dt>Факт, ч</dt>
+                                <dd>@issue.FaktHours</dd>
+                            </div>
+                            <div>
+                                <dt>Срок</dt>
+                                <dd>@(issue.TermDate?.ToString("dd.MM.yyyy") ?? "—")</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    @if (issue.ChildrenIssue?.Any() ?? false)
+                    {
+                        RenderIssueTree(issue.ChildrenIssue);
+                    }
+                </li>
             }
-        }
+        </ul>
     }
 }
 
-<div class="table-wrapper">
-    <table class="my-table">
-        <thead>
-            <tr>
-                <th>Номер задачи</th>
-                <th>Наименование задачи</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Issues.Any())
-            {
-                RenderIssueRows(Model.Issues, 0);
-            }
-            else
-            {
-                <tr>
-                    <td colspan="2" class="text-center">Данные отсутствуют</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="tree-wrapper">
+    @if (Model.Issues.Any())
+    {
+        RenderIssueTree(Model.Issues);
+    }
+    else
+    {
+        <div class="empty-state">Данные отсутствуют</div>
+    }
 </div>
