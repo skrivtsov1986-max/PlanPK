@@ -10,37 +10,46 @@
         <ul class="issue-tree">
             @foreach (var issue in issues)
             {
-                <li>
+                var hasChildren = issue.ChildrenIssue?.Any() ?? false;
+                <li class="issue-node @(hasChildren ? "has-children" : string.Empty)">
                     <div class="issue-card">
-                        <div class="issue-title">
-                            <span class="issue-number">@issue.Number</span>
-                            <span class="issue-name">@issue.Name</span>
+                        @if (hasChildren)
+                        {
+                            <button class="tree-toggle" type="button" aria-expanded="true" aria-label="Свернуть ветку">
+                                <span class="toggle-icon">−</span>
+                            </button>
+                        }
+                        <div class="issue-content">
+                            <div class="issue-title">
+                                <span class="issue-number">@issue.Number</span>
+                                <span class="issue-name">@issue.Name</span>
+                            </div>
+                            <dl class="issue-meta">
+                                <div>
+                                    <dt>ID</dt>
+                                    <dd>@issue.Id</dd>
+                                </div>
+                                <div>
+                                    <dt>Parent ID</dt>
+                                    <dd>@(issue.ParentId ?? "—")</dd>
+                                </div>
+                                <div>
+                                    <dt>План, ч</dt>
+                                    <dd>@issue.PlanHours</dd>
+                                </div>
+                                <div>
+                                    <dt>Факт, ч</dt>
+                                    <dd>@issue.FaktHours</dd>
+                                </div>
+                                <div>
+                                    <dt>Срок</dt>
+                                    <dd>@(issue.TermDate?.ToString("dd.MM.yyyy") ?? "—")</dd>
+                                </div>
+                            </dl>
                         </div>
-                        <dl class="issue-meta">
-                            <div>
-                                <dt>ID</dt>
-                                <dd>@issue.Id</dd>
-                            </div>
-                            <div>
-                                <dt>Parent ID</dt>
-                                <dd>@(issue.ParentId ?? "—")</dd>
-                            </div>
-                            <div>
-                                <dt>План, ч</dt>
-                                <dd>@issue.PlanHours</dd>
-                            </div>
-                            <div>
-                                <dt>Факт, ч</dt>
-                                <dd>@issue.FaktHours</dd>
-                            </div>
-                            <div>
-                                <dt>Срок</dt>
-                                <dd>@(issue.TermDate?.ToString("dd.MM.yyyy") ?? "—")</dd>
-                            </div>
-                        </dl>
                     </div>
 
-                    @if (issue.ChildrenIssue?.Any() ?? false)
+                    @if (hasChildren)
                     {
                         RenderIssueTree(issue.ChildrenIssue);
                     }
