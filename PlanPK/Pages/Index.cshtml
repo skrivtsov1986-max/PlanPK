@@ -1,0 +1,25 @@
+﻿@page
+@model List<Issues>
+@{
+    ViewData["Title"] = "План приемной кампании 2026";
+}
+
+<div class="text-center">
+    <table class="my-table">
+        <thead>
+            <tr>
+                <th>Номер задачи</th>
+                <th>Наименование задачи</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Number</td>
+                    <td>@item.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
