@@ -1,10 +1,33 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "План приемной кампании 2026";
 }
 
-<div class="text-center">
+@functions {
+    void RenderIssueRows(IEnumerable<Issues> issues, int level)
+    {
+        foreach (var issue in issues)
+        {
+            <tr>
+                <td>@issue.Number</td>
+                <td>
+                    <div class="tree-cell" style="padding-left:@(level * 16)px">
+                        <span class="tree-branch">@((issue.ChildrenIssue?.Any() ?? false) ? "▸" : "•")</span>
+                        <span>@issue.Name</span>
+                    </div>
+                </td>
+            </tr>
+
+            if (issue.ChildrenIssue?.Any() ?? false)
+            {
+                RenderIssueRows(issue.ChildrenIssue, level + 1);
+            }
+        }
+    }
+}
+
+<div class="table-wrapper">
     <table class="my-table">
         <thead>
             <tr>
@@ -13,11 +36,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Issues)
+            @if (Model.Issues.Any())
+            {
+                RenderIssueRows(Model.Issues, 0);
+            }
+            else
             {
                 <tr>
-                    <td>@item.Number</td>
-                    <td>@item.Name</td>
+                    <td colspan="2" class="text-center">Данные отсутствуют</td>
                 </tr>
             }
         </tbody>
